@@ -33,7 +33,13 @@ def question_1(movies, credits):
     """
 
     #################################################
-    # Your code goes here ...
+    movies_df = pd.read_csv(movies)
+    credits_df = pd.read_csv(credits)
+
+
+    df1 = pd.merge(movies_df, credits_df, on='id')
+
+    # df1.to_csv('test.csv')
     #################################################
 
     log("QUESTION 1", output_df=df1, other=df1.shape)
@@ -49,7 +55,13 @@ def question_2(df1):
     """
 
     #################################################
-    # Your code goes here ...
+    # Columns to Remove: ' 'id', title', 'popularity', 'cast', 'crew', 'budget', 'genres', 'original_language', 'production_companies', 'production_countries', 'release_date', 'revenue', 'runtime', 'spoken_languages', 'vote_average', 'vote_count'
+    columns_to_drop = [
+         'id', 'title', 'popularity', 'cast', 'crew', 'budget', 'genres', 'original_language', 'production_companies', 'production_countries', 'release_date', 'revenue', 'runtime', 'spoken_languages', 'vote_average', 'vote_count'
+    ]
+    df2 = df1.drop(columns_to_drop, axis=1)
+    # df2.to_csv('test.csv')
+
     #################################################
 
     log("QUESTION 2", output_df=df2, other=(len(df2.columns), sorted(df2.columns)))
@@ -66,6 +78,9 @@ def question_3(df2):
 
     #################################################
     # Your code goes here ...
+    df3=df2
+    df3['id'] = df3.index   
+    # df3.to_csv('test.csv') 
     #################################################
 
     log("QUESTION 3", output_df=df3, other=df3.index.name)
@@ -81,7 +96,18 @@ def question_4(df3):
     """
 
     #################################################
-    # Your code goes here ...
+    #Need to attach budget back and then drop it
+    movies_df = pd.read_csv("movies.csv")
+    movies_df = movies_df[['budget', 'original_title']]
+    movies_df = movies_df[movies_df.budget != 0] 
+    # print(movies_df.head(5).to_string())
+    # movies_df now has movies that have a budget
+    
+
+
+    df4 =  pd.merge(df3, movies_df, how='left', on=['original_title'])
+    # df4 = df4.drop(['budget'], axis=1)
+    # df4.to_csv('test.csv')
     #################################################
 
     log("QUESTION 4", output_df=df4, other=(df4['budget'].min(), df4['budget'].max(), df4['budget'].mean()))
@@ -97,7 +123,15 @@ def question_5(df4):
     """
 
     #################################################
-    # Your code goes here ...
+    
+    movies_df = pd.read_csv("movies.csv")
+    movies_df = movies_df[['revenue', 'original_title']]
+    
+    df5 = pd.merge(df4, movies_df, how='left', on=['original_title'])
+
+
+    df5['success_impact'] = (df5['revenue'] - df5['budget'])/ df5['budget'] 
+
     #################################################
 
     log("QUESTION 5", output_df=df5,
@@ -115,6 +149,7 @@ def question_6(df5):
 
     #################################################
     # Your code goes here ...
+    df6=df5
     #################################################
 
     log("QUESTION 6", output_df=df6, other=(df6['popularity'].min(), df6['popularity'].max(), df6['popularity'].mean()))
@@ -131,6 +166,7 @@ def question_7(df6):
 
     #################################################
     # Your code goes here ...
+    df7=df6
     #################################################
 
     log("QUESTION 7", output_df=df7, other=df7['popularity'].dtype)
@@ -147,6 +183,7 @@ def question_8(df7):
 
     #################################################
     # Your code goes here ...
+    df8=df7
     #################################################
 
     log("QUESTION 8", output_df=df8, other=df8["cast"].head(10).values)
@@ -163,6 +200,7 @@ def question_9(df8):
 
     #################################################
     # Your code goes here ...
+    movies=df8
     #################################################
 
     log("QUESTION 9", output_df=None, other=movies)
@@ -179,6 +217,7 @@ def question_10(df8):
 
     #################################################
     # Your code goes here ...
+    df10=df8
     #################################################
 
     log("QUESTION 10", output_df=df10, other=df10["release_date"].head(5).to_string().replace("\n", " "))
@@ -193,6 +232,7 @@ def question_11(df10):
 
     #################################################
     # Your code goes here ...
+    
     #################################################
 
     plt.savefig("{}-Q11.png".format(studentid))
@@ -230,11 +270,11 @@ if __name__ == "__main__":
     df3 = question_3(df2)
     df4 = question_4(df3)
     df5 = question_5(df4)
-    df6 = question_6(df5)
-    df7 = question_7(df6)
-    df8 = question_8(df7)
-    movies = question_9(df8)
-    df10 = question_10(df8)
-    question_11(df10)
-    question_12(df10)
-    question_13(df10)
+    # df6 = question_6(df5)
+    # df7 = question_7(df6)
+    # df8 = question_8(df7)
+    # movies = question_9(df8)
+    # df10 = question_10(df8)
+    # question_11(df10)
+    # question_12(df10)
+    # question_13(df10)
