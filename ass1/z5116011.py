@@ -56,10 +56,10 @@ def question_2(df1):
 
     #################################################
     # Columns to Remove: ' 'id', title', 'popularity', 'cast', 'crew', 'budget', 'genres', 'original_language', 'production_companies', 'production_countries', 'release_date', 'revenue', 'runtime', 'spoken_languages', 'vote_average', 'vote_count'
-    columns_to_drop = [
+    columns_to_keep = [
          'id', 'title', 'popularity', 'cast', 'crew', 'budget', 'genres', 'original_language', 'production_companies', 'production_countries', 'release_date', 'revenue', 'runtime', 'spoken_languages', 'vote_average', 'vote_count'
     ]
-    df2 = df1.drop(columns_to_drop, axis=1)
+    df2 = df1[columns_to_keep]
     # df2.to_csv('test.csv')
 
     #################################################
@@ -79,7 +79,7 @@ def question_3(df2):
     #################################################
     # Your code goes here ...
     df3=df2
-    df3['id'] = df3.index   
+    df3['id'] = df3.index
     # df3.to_csv('test.csv') 
     #################################################
 
@@ -96,19 +96,9 @@ def question_4(df3):
     """
 
     #################################################
-    #Need to attach budget back and then drop it
-    movies_df = pd.read_csv("movies.csv")
-    movies_df = movies_df[['budget', 'original_title']]
-    movies_df = movies_df[movies_df.budget != 0] 
-    # print(movies_df.head(5).to_string())
-    # movies_df now has movies that have a budget
-    
-
-
-    df4 =  pd.merge(df3, movies_df, how='left', on=['original_title'])
-    # df4 = df4.drop(['budget'], axis=1)
-    # df4.to_csv('test.csv')
-    #################################################
+   
+    df3 = df3[df3.budget != 0]
+    df4=df3
 
     log("QUESTION 4", output_df=df4, other=(df4['budget'].min(), df4['budget'].max(), df4['budget'].mean()))
     return df4
@@ -124,13 +114,13 @@ def question_5(df4):
 
     #################################################
     
-    movies_df = pd.read_csv("movies.csv")
-    movies_df = movies_df[['revenue', 'original_title']]
+  
     
-    df5 = pd.merge(df4, movies_df, how='left', on=['original_title'])
+    df5 = df4
 
-
+    pd.options.mode.chained_assignment = None
     df5['success_impact'] = (df5['revenue'] - df5['budget'])/ df5['budget'] 
+    df5.to_csv('test.csv')
 
     #################################################
 
@@ -148,8 +138,13 @@ def question_6(df5):
     """
 
     #################################################
-    # Your code goes here ...
+    pd.options.mode.chained_assignment = None
+
+    df5['popularity'] =  (df5['popularity'] - df5['popularity'].min() ) / (df5['popularity'].max() - df5['popularity'].min())
+
+    df5['popularity']= df5['popularity'].apply( lambda x:100*x)
     df6=df5
+    
     #################################################
 
     log("QUESTION 6", output_df=df6, other=(df6['popularity'].min(), df6['popularity'].max(), df6['popularity'].mean()))
@@ -166,6 +161,8 @@ def question_7(df6):
 
     #################################################
     # Your code goes here ...
+    df6.popularity= df6.popularity.astype('int16')
+    # .astype('int16')
     df7=df6
     #################################################
 
@@ -270,8 +267,8 @@ if __name__ == "__main__":
     df3 = question_3(df2)
     df4 = question_4(df3)
     df5 = question_5(df4)
-    # df6 = question_6(df5)
-    # df7 = question_7(df6)
+    df6 = question_6(df5)
+    df7 = question_7(df6)
     # df8 = question_8(df7)
     # movies = question_9(df8)
     # df10 = question_10(df8)
