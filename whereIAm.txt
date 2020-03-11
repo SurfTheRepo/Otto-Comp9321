@@ -1,0 +1,9 @@
+LECTURE:
+	Lecs	Week 1 done
+		week2 datacleaning done
+		Week 3 Data Preprocessing TODO
+		Week3 part2 Visualization TODO
+TUTE:
+
+	Week 2 Done
+	Week 3 Done
